@@ -1,0 +1,31 @@
+data:
+  _target_: src.data.datamodule3.DataModule3
+  dataset:
+    _target_: src.data.components.dataset3.Dataset3
+    features_dir: data/Dataset3/himawari
+    targets_dir: data/Dataset3/radar
+  data_dir: data/Dataset3
+  train_val_test_split:
+  - 0.7
+  - 0.3
+  - 0
+  batch_size: 16
+  num_workers: 2
+  pin_memory: false
+model:
+  _target_: src.models.mnist_module.MNISTLitModule
+  optimizer:
+    _target_: torch.optim.Adam
+    _partial_: true
+    lr: 0.001
+    weight_decay: 0.0
+  scheduler:
+    _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+    _partial_: true
+    mode: min
+    factor: 0.1
+    patience: 10
+  net:
+    _target_: src.models.components.simple_unet.SimpleUnet
+    in_channels: 10
+    out_channels: 1

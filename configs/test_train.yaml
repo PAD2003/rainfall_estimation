@@ -1,0 +1,4 @@
+defaults:
+  - data: dataset3.yaml
+  - model: dataset3.yaml
+  - _self_

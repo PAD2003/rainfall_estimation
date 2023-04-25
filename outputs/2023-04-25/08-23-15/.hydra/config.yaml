@@ -1,0 +1,12 @@
+_target_: src.data.datamodule3.DataModule3
+dataset:
+  _target_: src.data.components.dataset3.Dataset3
+  features_dir: data/Dataset3/himawari
+  targets_dir: data/Dataset3/radar
+data_dir: data/Dataset3
+train_val_test_split:
+- 0.7
+- 0.3
+batch_size: 16
+num_workers: 2
+pin_memory: false

@@ -1,0 +1,9 @@
+_target_: src.data.datamodule1.DataModule1
+data_dir: data
+batch_size: 64
+train_val_test_split:
+- 0.7
+- 0.3
+- 0
+num_workers: 0
+pin_memory: false
