@@ -14,7 +14,10 @@ class SimpleFCNet(nn.Module):
             nn.ReLU(),
             nn.Linear(hidden_units, hidden_units),
             nn.ReLU(),
-            nn.Linear(hidden_units, output_size)
+            nn.Linear(hidden_units, hidden_units),
+            nn.ReLU(),
+            nn.Linear(hidden_units, output_size),
+            nn.ReLU()
         )
 
     def forward(self, x):
@@ -44,13 +47,14 @@ if __name__ == "__main__":
 
         # show model
         summary(model=fcn,
-                input_size=(16,12),
+                input_size=(16,18),
                 col_names=["input_size", "output_size", "num_params", "trainable"],
                 col_width=20,
                 row_settings=["var_names"])
         
         # test input & output shape
-        random_input = torch.randn([16, 12])
+        fcn = fcn.cpu()
+        random_input = torch.randn([16, 18]).cpu()
         output = fcn(random_input)
         print(f"\n\nINPUT SHAPE: {random_input.shape}")
         print(f"OUTPUT SHAPE: {output.shape}\n")

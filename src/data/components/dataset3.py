@@ -32,8 +32,10 @@ class Dataset3(Dataset):
                 if file.endswith(".tif"):
                     path = os.path.join(root, file)
                     folder_path = os.path.dirname(path)
-                    folder_path = "/".join(folder_path.split("/")[3:])
-                    result.append((f"data/Dataset3/himawari/{folder_path}", f"data/Dataset3/radar/{folder_path}"))
+                    folder_path = "/".join(folder_path.split("/")[-4:])
+                    # result.append((f"data/Dataset3/himawari/{folder_path}", f"data/Dataset3/radar/{folder_path}"))
+                    result.append((self.features_dir + "/" + folder_path, self.targets_dir + "/" + folder_path))
+                    # /mnt/banana/k66/pad/rainfall_estimation/data//Dataset3/himawari/k66/pad/rainfall_estimation/data//Dataset3/radar/2020/10/18/12
         
         return result
     

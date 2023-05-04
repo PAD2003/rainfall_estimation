@@ -49,7 +49,7 @@ class Module1(LightningModule):
 
     def model_step(self, batch: Any):
         x, y = batch
-        preds = self.forward(x)
+        preds = self.forward(x).squeeze()
         loss = self.criterion(preds, y)
         return loss, preds, y
 
