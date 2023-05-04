@@ -26,8 +26,8 @@ pyrootutils.setup_root(__file__, indicator=".project-root", pythonpath=True)
 # more info: https://github.com/ashleve/pyrootutils
 # ------------------------------------------------------------------------------------ #
 
-# import sys
-# sys.path.append("src/data")
+import sys
+sys.path.append("src/data")
 
 from src import utils
 

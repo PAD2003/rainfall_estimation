@@ -14,7 +14,7 @@ model_checkpoint:
   auto_insert_metric_name: False
 
 early_stopping:
-  monitor: "val/loss"
+  monitor: "train/loss"
   patience: 5
   mode: "min"
 

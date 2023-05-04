@@ -1,11 +1,10 @@
 from typing import Any, Dict, Optional
 import torch
-import torchvision
-import lightning.pytorch as pl
 from torch.utils.data import DataLoader, random_split, Dataset
 from components.dataset3 import Dataset3
+from lightning import LightningDataModule
 
-class DataModule3(pl.LightningDataModule):
+class DataModule3(LightningDataModule):
     def __init__(self,
                  dataset: Dataset3,
                  data_dir: str,

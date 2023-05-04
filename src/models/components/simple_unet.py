@@ -7,6 +7,9 @@ class conv(nn.Module):
         self.block = nn.Sequential(
             nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding),
             nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(out_channels, out_channels, kernel_size, stride, padding),
+            nn.BatchNorm2d(out_channels),
             nn.ReLU(inplace=True)
         )
 
@@ -18,6 +21,8 @@ class up_conv(nn.Module):
         super().__init__()
         self.block = nn.Sequential(
             nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride, padding),
+            nn.ReLU(inplace=True),
+            nn.ConvTranspose2d(out_channels, out_channels, kernel_size, stride, padding),
             nn.ReLU(inplace=True)
         )
 
@@ -37,12 +42,16 @@ class SimpleUnet(nn.Module):
         # encoder
         self.conv1 = conv(in_channels, 16)
         self.conv2 = conv(16, 32)
-
         self.conv3 = conv(32, 64)
+        self.conv4 = conv(64, 128)
+
+        self.conv5 = conv(128, 256)
 
         # decoder
-        self.up_conv4 = up_conv(64 + 32, 32)
-        self.up_conv5 = up_conv(32 + 16, 16)
+        self.up_conv6 = up_conv(256 + 128, 128)
+        self.up_conv7 = up_conv(128 + 64, 64)
+        self.up_conv8 = up_conv(64 + 32, 32)
+        self.up_conv9 = up_conv(32 + 16, 16)
 
         # last layer
         self.last_conv = nn.Conv2d(16, out_channels, 1)
@@ -59,22 +68,46 @@ class SimpleUnet(nn.Module):
         x = self.maxpool(conv2)
         # print("Max pool: ", x.shape, "\n")
 
-        x = self.conv3(x)
-        # print("Conv3: ", x.shape, "\n")
+        conv3 = self.conv3(x)
+        # print("Conv3: ", conv3.shape)
+        x = self.maxpool(conv3)
+        # print("Max pool: ", x.shape, "\n")
+
+        conv4 = self.conv4(x)
+        # print("Conv4: ", conv4.shape)
+        x = self.maxpool(conv4)
+        # print("Max pool: ", x.shape, "\n")
+
+        x = self.conv5(x)
+        # print("Conv4: ", x.shape, "\n")
         
         # DECODER
         x = self.upsample(x)
         # print("Up sample: ", x.shape)
+        x = torch.cat([x, conv4], dim=1)
+        # print("Torch cat: ", x.shape)
+        x = self.up_conv6(x)
+        # print("Up conv4: ", x.shape, "\n")
+
+        x = self.upsample(x)
+        # print("Up sample: ", x.shape)
+        x = torch.cat([x, conv3], dim=1)
+        # print("Torch cat: ", x.shape)
+        x = self.up_conv7(x)
+        # print("Up conv4: ", x.shape, "\n")
+
+        x = self.upsample(x)
+        # print("Up sample: ", x.shape)
         x = torch.cat([x, conv2], dim=1)
         # print("Torch cat: ", x.shape)
-        x = self.up_conv4(x)
+        x = self.up_conv8(x)
         # print("Up conv4: ", x.shape, "\n")
 
         x = self.upsample(x)
         # print("Up sample: ", x.shape)
         x = torch.cat([x, conv1], dim=1)
         # print("Torch cat: ", x.shape)
-        x = self.up_conv5(x)
+        x = self.up_conv9(x)
         # print("Up conv5: ", x.shape, "\n")
 
         # output layer
