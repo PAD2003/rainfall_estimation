@@ -4,6 +4,7 @@ import torch
 from lightning import LightningModule
 from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics import PeakSignalNoiseRatio
+import torchvision
 
 class Module3(LightningModule):
     def __init__(
@@ -35,6 +36,9 @@ class Module3(LightningModule):
 
         # for tracking best so far validation accuracy
         self.val_psnr_best = MaxMetric()
+
+        # to make use of output after test step
+        self.test_step_outputs = []
 
     def forward(self, x: torch.Tensor):
         return self.net(x)
@@ -92,8 +96,30 @@ class Module3(LightningModule):
         self.log("test/loss", self.test_loss, on_step=False, on_epoch=True, prog_bar=True)
         self.log("test/PSNR", self.test_psnr, on_step=False, on_epoch=True, prog_bar=True)
 
+        # save the output for on_test_epoch_end()
+        self.test_step_outputs.append({"targets": targets[5], "preds": preds[5]})
+
     def on_test_epoch_end(self):
-        pass
+        # get targets & preds
+        data = self.test_step_outputs[0]
+        targets = data["targets"].cpu()
+        preds = data["preds"].cpu()
+
+        print(f"Targets: {targets.shape}")
+        print(f"Preds: {preds.shape}")
+
+        # denormalise
+        mean = torch.tensor([-2964.3228])
+        std = torch.tensor([16963.572])
+        denormalised_targets = targets.mul(std).add(mean)
+        denormalised_preds = preds.mul(std).add(mean)
+
+        # stack 2 images into a torch tensor
+        result = torch.stack([denormalised_targets, denormalised_preds])
+        print(denormalised_targets[0], denormalised_preds[0])
+
+        # save image
+        torchvision.utils.save_image(result, "test_on_test_epoch_end.png")
 
     def configure_optimizers(self):
         """Choose what optimizers and learning-rate schedulers to use in your optimization.
