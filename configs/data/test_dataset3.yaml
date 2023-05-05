@@ -5,6 +5,22 @@ dataset:
   features_dir: data/Dataset3/himawari
   targets_dir: data/Dataset3/radar
 
+input_transform:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  # - _target_: torchvision.transforms.ToTensor
+  - _target_: torchvision.transforms.Normalize # (each_channel - mean) / std
+    mean: [244.4633 , 240.71112, 241.49652, 241.35864, 241.24358, 241.72144, 242.25307, 241.99025, 243.02498, 245.28816]
+    std: [25.258839, 23.773561, 25.376684, 24.331238, 22.94927 , 23.437948, 25.545214, 25.882654, 26.089962, 26.234522]
+  
+output_transform:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  # - _target_: torchvision.transforms.ToTensor
+  - _target_: torchvision.transforms.Normalize # (each_channel - mean) / std
+    mean: [-2964.3228]
+    std: [16963.572]
+
 data_dir: data/Dataset3
 train_val_test_split: [0.7, 0.3, 0]
 batch_size: 16

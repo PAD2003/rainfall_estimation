@@ -1,0 +1,47 @@
+_target_: src.data.datamodule3.DataModule3
+dataset:
+  _target_: src.data.components.dataset3.Dataset3
+  features_dir: data/Dataset3/himawari
+  targets_dir: data/Dataset3/radar
+input_transform:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: torchvision.transforms.Normalize
+    mean:
+    - 0.48444372
+    - 0.45542905
+    - 0.4615048
+    - 0.46042982
+    - 0.459545
+    - 0.46324182
+    - 0.4673485
+    - 0.4653183
+    - 0.47332042
+    - 0.49082303
+    std:
+    - 0.19533664
+    - 0.18385075
+    - 0.19624762
+    - 0.18816279
+    - 0.17747563
+    - 0.1812549
+    - 0.197551
+    - 0.20016083
+    - 0.20176409
+    - 0.20288189
+output_transform:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: torchvision.transforms.Normalize
+    mean:
+    - 0.9678855
+    std:
+    - 0.16919306
+data_dir: data/Dataset3
+train_val_test_split:
+- 0.7
+- 0.3
+- 0
+batch_size: 16
+num_workers: 2
+pin_memory: false

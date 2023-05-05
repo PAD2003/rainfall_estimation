@@ -4,6 +4,7 @@ from typing import List, Tuple
 import torch
 from torchvision.transforms import ToTensor
 from PIL import Image
+import numpy as np
 
 class Dataset3(Dataset):
     def __init__(self, features_dir, targets_dir) -> None:
@@ -50,3 +51,15 @@ class Dataset3(Dataset):
             res.append(tensor_image)
 
         return torch.stack(res)
+    
+    # def image_from_dir(self, feature_dir):
+    #     """Stack all image in a directory"""
+    #     res = []
+
+    #     for path in os.listdir(feature_dir):
+    #         image_path = os.path.join(feature_dir, path)
+    #         image = Image.open(image_path)
+    #         array_image = np.array(image)
+    #         res.append(array_image)
+
+    #     return np.stack(res)

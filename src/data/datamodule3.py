@@ -2,12 +2,16 @@ from typing import Any, Dict, Optional
 import torch
 from torch.utils.data import DataLoader, random_split, Dataset
 from components.dataset3 import Dataset3
+from components.dataset3_transformed import TransformedDataset3
 from lightning import LightningDataModule
+from torchvision import transforms
 
 class DataModule3(LightningDataModule):
     def __init__(self,
                  dataset: Dataset3,
                  data_dir: str,
+                 input_transform: transforms = None,
+                 output_transform: transforms = None,
                  train_val_test_split = [5666, 1000, 0],
                  batch_size: int = 64,
                  num_workers: int = 0,
@@ -33,11 +37,15 @@ class DataModule3(LightningDataModule):
         """
         # load and split datasets only if not loaded already
         if not self.data_train and not self.data_val and not self.data_test:
-            self.data_train, self.data_val, self.data_test = random_split(
+            data_train, data_val, data_test = random_split(
                 dataset=self.hparams.dataset,
                 lengths=self.hparams.train_val_test_split,
                 generator=torch.Generator().manual_seed(42),
             )
+
+            self.data_train = TransformedDataset3(dataset=data_train, input_transform=self.hparams.input_transform, output_transform=self.hparams.output_transform)
+            self.data_val = TransformedDataset3(dataset=data_val, input_transform=self.hparams.input_transform, output_transform=self.hparams.output_transform)
+            self.data_test = TransformedDataset3(dataset=data_test, input_transform=self.hparams.input_transform, output_transform=self.hparams.output_transform)
     
     def train_dataloader(self) -> DataLoader:
         return DataLoader(dataset=self.data_train,
@@ -135,7 +143,7 @@ if __name__ == "__main__":
         print("\nDATAMODULE PASSED\n")
 
     # def main with hydra
-    @hydra.main(version_base="1.3", config_path=config_path, config_name="dataset3")
+    @hydra.main(version_base="1.3", config_path=config_path, config_name="test_dataset3")
     def main(cfg: DictConfig):
         test_dataset(cfg)
         test_datamodule(cfg)
