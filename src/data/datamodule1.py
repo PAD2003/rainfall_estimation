@@ -65,6 +65,7 @@ class DataModule1(LightningDataModule):
                 lengths=self.hparams.train_val_test_split,
                 generator=torch.Generator().manual_seed(42),
             )
+            self.data_test = self.data_val
 
 
     def train_dataloader(self):

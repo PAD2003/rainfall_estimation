@@ -15,9 +15,6 @@ class SimpleFCNet(nn.Module):
             nn.Linear(hidden_units, hidden_units),
             nn.ReLU(),
             nn.Linear(hidden_units, hidden_units),
-            nn.ReLU(),
-            nn.Linear(hidden_units, output_size),
-            nn.ReLU()
         )
 
     def forward(self, x):

@@ -45,7 +45,7 @@ class DataModule3(LightningDataModule):
 
             self.data_train = TransformedDataset3(dataset=data_train, input_transform=self.hparams.input_transform, output_transform=self.hparams.output_transform)
             self.data_val = TransformedDataset3(dataset=data_val, input_transform=self.hparams.input_transform, output_transform=self.hparams.output_transform)
-            self.data_test = TransformedDataset3(dataset=self.hparams.dataset, input_transform=self.hparams.input_transform, output_transform=self.hparams.output_transform)
+            self.data_test = TransformedDataset3(dataset=data_val, input_transform=self.hparams.input_transform, output_transform=self.hparams.output_transform)
     
     def train_dataloader(self) -> DataLoader:
         return DataLoader(dataset=self.data_train,

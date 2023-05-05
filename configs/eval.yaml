@@ -2,8 +2,8 @@
 
 defaults:
   - _self_
-  - data: dataset3.yaml # choose datamodule with `test_dataloader()` for evaluation
-  - model: dataset3.yaml
+  - data: dataset1.yaml # choose datamodule with `test_dataloader()` for evaluation
+  - model: dataset1.yaml
   - logger: null
   - trainer: default.yaml
   - paths: default.yaml
@@ -15,4 +15,4 @@ task_name: "eval"
 tags: ["dev"]
 
 # passing checkpoint path is necessary for evaluation
-ckpt_path: ${paths.root_dir}/logs/train/runs/2023-05-05_11-33-55/checkpoints/epoch_062.ckpt
+ckpt_path: ${paths.root_dir}/logs/train/runs/2023-05-04_08-22-36/checkpoints/epoch_099.ckpt
